@@ -7,6 +7,7 @@
   // seem very useful, but remember it--if a function needs to provide an
   // iterator when the user does not pass one in, this will be handy.
   _.identity = function(val) {
+    return val;
   };
 
   /**
@@ -31,12 +32,26 @@
   // Return an array of the first n elements of an array. If n is undefined,
   // return just the first element.
   _.first = function(array, n) {
+    if(n === 0){
+      return [];
+    }
     return n === undefined ? array[0] : array.slice(0, n);
   };
 
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
+      if (Array.isArray(array)) {
+        if (n === undefined) {
+          return array[array.length-1];
+        } else if (n > array.length) {
+          return array;
+        } else if(n < 0 || n === 0){
+          return [];
+        } else {
+          return array.slice(n-1);
+        }
+      }
   };
 
   // Call iterator(value, key, collection) for each element of collection.
@@ -44,7 +59,17 @@
   //
   // Note: _.each does not have a return value, but rather simply runs the
   // iterator function over each item in the input collection.
-  _.each = function(collection, iterator) {
+   _.each = function(collection, iterator) {
+    if (Array.isArray(collection)) {
+      for (var i = 0; i < collection.length; i++) {
+        iterator(collection[i], i, collection);
+      }
+    } else {
+      for (var key in collection) {
+        iterator(collection[key], key, collection)
+      }
+    }
+    /* END SOLUTION */
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
@@ -66,17 +91,82 @@
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
+    var filterArr = [];
+    if(Array.isArray(collection)){
+    for(var i = 0; i <collection.length; i++){
+      if(test(collection[i]) === true){
+        filterArr.push(collection[i]);
+      }
+    }
+    return filterArr;
+  } else {
+    for(var key in collection){
+      if(test(collection[key]) === true){
+        filterArr.push(collection[key]);
+      }
+    }
+    return filterArr;
+    }
   };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
-    // TIP: see if you can re-use _.filter() here, without simply
-    // copying code in and modifying it
+    var rejectArray = [];
+    if(Array.isArray(collection)){
+    for(var i = 0; i <collection.length; i++){
+      if(test(collection[i]) === false){
+        rejectArray.push(collection[i]);
+      }
+    }
+    return rejectArray;
+    } else {
+    for(var key in collection){
+      if(test(collection[key]) === false){
+        rejectArray.push(collection[key]);
+      }
+    }
+    return rejectArray;
+    }
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array, isSorted, iterator) {
-  };
+    var uniqueTransformed = [];
+    var transformedArray = [];
+    var uniqArray = [];
+    iterator = _.identity
+     //Check whether isSorted is a function
+        //iterator = isSorted (iterator is supposed to be a function)
+        //reassign isSorted = false;
+    if (typeof isSorted === 'function') {
+      iterator = isSorted;
+      isSorted = false;
+    }
+    // }
+    if(!isSorted){
+    for(var i=0; i<array.length; i++){
+      transformedArray.push(iterator(array[i]));
+    }
+    for (var y=0; y<transformedArray.length; y++){
+        if(_.indexOf(uniqueTransformed, transformedArray[y]) === -1){
+          uniqueTransformed.push(transformedArray[y]);
+          uniqArray.push(array[y]);
+        }
+    }
+    return uniqArray;
+  } else {
+    for(var i=0; i<array.length; i++){
+      transformedArray.push(iterator(array[i]));
+    }
+    // for (var y=0; y<transformedArray.length; y++){
+        if(_.indexOf(uniqueTransformed, transformedArray[y]) === -1){
+          uniqueTransformed.push(transformedArray[y]);
+          uniqArray.push(array[y]);
+        // }
+    }
+  }
+  return uniqArray
+};
 
 
   // Return the results of applying an iterator to each element.
