@@ -131,46 +131,27 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array, isSorted, iterator) {
-    var uniqueTransformed = [];
-    var transformedArray = [];
-    var uniqArray = [];
-    iterator = _.identity
-     //Check whether isSorted is a function
-        //iterator = isSorted (iterator is supposed to be a function)
-        //reassign isSorted = false;
-    if (typeof isSorted === 'function') {
-      iterator = isSorted;
-      isSorted = false;
-    }
-    // }
-    if(!isSorted){
-    for(var i=0; i<array.length; i++){
-      transformedArray.push(iterator(array[i]));
-    }
-    for (var y=0; y<transformedArray.length; y++){
-        if(_.indexOf(uniqueTransformed, transformedArray[y]) === -1){
-          uniqueTransformed.push(transformedArray[y]);
-          uniqArray.push(array[y]);
-        }
-    }
-    return uniqArray;
-  } else {
-    for(var i=0; i<array.length; i++){
-      transformedArray.push(iterator(array[i]));
-    }
-    // for (var y=0; y<transformedArray.length; y++){
-        if(_.indexOf(uniqueTransformed, transformedArray[y]) === -1){
-          uniqueTransformed.push(transformedArray[y]);
-          uniqArray.push(array[y]);
-        // }
-    }
-  }
-  return uniqArray
+
+  // return uniqArray
+  // if (iterator){
+  //   array = _.map(array, iterator);
+  // }
+  
+  // return [...new Set(array)];
+
+
+    
 };
+
 
 
   // Return the results of applying an iterator to each element.
   _.map = function(collection, iterator) {
+    var mapArr = [];
+    for (var i=0; i<collection.length; i++){
+      mapArr.push(iterator(collection[i]));
+    }
+     return mapArr;
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
@@ -215,7 +196,20 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    if (arguments.length === 2){
+      // iterator = accumulator;
+      accumulator = collection[0];
+      for(var i=1;i<collection.length; i++){
+        accumulator = iterator(accumulator, collection[i]);
+      }
+    } else {
+      for(var i=0; i<collection.length; i++){
+        accumulator = iterator(accumulator, collection[i]);
+      }
+    }
+    return accumulator;
   };
+
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
