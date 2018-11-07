@@ -131,7 +131,7 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array, isSorted, iterator) {
-
+  
   // return uniqArray
   // if (iterator){
   //   array = _.map(array, iterator);
@@ -226,6 +226,27 @@
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
+    if (iterator){
+      var everyArr = [];
+      for (var i=0; i<collection.length; i++){
+        if (iterator(collection[i])){
+          everyArr.push(collection[i]);
+        } 
+      }
+    }else if (!iterator){
+      var everyArr = [];
+        for (var i=0; i<collection.length; i++){
+          if (collection[i]){
+          everyArr.push(collection[i]);
+          }
+        }
+      }
+    if (everyArr.length === collection.length){
+      return true;
+    } else {
+      return false;
+    }
+  
     // TIP: Try re-using reduce() here.
   };
 
