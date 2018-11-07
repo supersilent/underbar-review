@@ -196,18 +196,24 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
-    if (arguments.length === 2){
-      // iterator = accumulator;
-      accumulator = collection[0];
-      for(var i=1;i<collection.length; i++){
-        accumulator = iterator(accumulator, collection[i]);
-      }
-    } else {
-      for(var i=0; i<collection.length; i++){
-        accumulator = iterator(accumulator, collection[i]);
-      }
+    if (!Array.isArray(collection)){
+      collection = Object.values(collection);
     }
-    return accumulator;
+      
+    if (arguments.length === 2){
+        // iterator = accumulator;
+        accumulator = collection[0];
+        for(var i=1;i<collection.length; i++){
+          accumulator = iterator(accumulator, collection[i]);
+        }
+      } else {
+        for(var i=0; i<collection.length; i++){
+          accumulator = iterator(accumulator, collection[i]);
+        }
+      }
+      return accumulator;
+      
+      
   };
 
 
@@ -253,6 +259,11 @@
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
+    for (let e of collection){
+      if (_.every([e], iterator)){ return true;}
+    }
+    
+    return false;
     // TIP: There's a very clever way to re-use every() here.
   };
 
@@ -276,12 +287,38 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
-  };
-
+    for (var i=1; i<arguments.length; i++){
+      obj = Object.assign(obj, arguments[i]);
+    }
+    return obj;
+  }
+  
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    // if (Object.keys(obj).length===0){return {}}
+    // for (var i=1; i<arguments.length; i++){
+    //   obj = Object.assign(arguments[i], obj);
+    // }
+    // return obj;
+    for (var i=1; i<arguments.length; i++){
+      var defaults = arguments[i];
+      for (var key in defaults){
+        if (obj[key] === undefined){
+          obj[key] = defaults[key];
+        }
+      }
+    }
+    return obj;
+  
   };
+
+
+    // if (Object.keys(obj).length===0){return {}}
+  //   for (var i=1; i<arguments.length; i++){
+  //     obj = Object.assign(arguments[i], obj);
+  //   }
+  //   return obj;
 
 
   /**
