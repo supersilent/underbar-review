@@ -361,7 +361,26 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
-  };
+    var cache = {};
+    return function(){
+      var key = JSON.stringify(arguments);
+        if (cache[key]){
+        return cache[key];
+        } else{
+          var result = func.apply(null, arguments);
+          cache[key] = result;
+          return result;
+        } 
+      }
+    };
+  
+  //have an empty object cache
+  //once function runs once, return value and stringify the function
+  //set the key in object cache to stringified function and the value to value
+  //when memoize is invoked with func 
+    //it will look up if func exists 
+    // - if it does it will return the value of the func key
+
 
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
@@ -370,6 +389,11 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    
+    if (arguments.length>2){
+        setTimeout(func(arguments[2],arguments[3]), wait);
+      }
+    setTimeout(func, wait);
   };
 
 
